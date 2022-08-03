@@ -1,8 +1,5 @@
-from sqlalchemy import create_engine
 from sqlalchemy import Column, ForeignKey, Integer, String, Table
 from sqlalchemy.orm import declarative_base, relationship
-
-engine = create_engine('postgresql+psycopg2://postgres:default@localhost:5432/university_db', echo=True)
 
 Base = declarative_base()
 
