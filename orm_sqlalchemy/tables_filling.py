@@ -7,7 +7,7 @@ from generating_data import assign_to_groups
 
 engine = create_engine('postgresql+psycopg2://postgres:default@localhost:5432/university_db', echo=True)
 
-Session = sessionmaker(engine)
+Session = sessionmaker(bind=engine)
 
 groups_dict = assign_to_groups()  # assigning students to groups
 
@@ -21,4 +21,4 @@ with Session() as session:
     i=0
     for groupname in groups_dict.keys():
         for student in groups_dict[groupname]:
-            session.add([Student(id=i+1, group_id=" ??? ", first_name=student[0], last_name=student[1])])
+            session.add([Student(id=i+1, first_name=student[0], last_name=student[1], group_id=" ??? ", courses="???")])
