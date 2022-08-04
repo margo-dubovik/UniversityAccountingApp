@@ -13,12 +13,14 @@ class Group(Base):
     def __repr__(self):
         return f"Group(id={self.id}, name={self.name})"
 
+
 association_table = Table(
     "association",
     Base.metadata,
     Column("student_id", ForeignKey("students.id"), primary_key=True),
     Column("course_id", ForeignKey("courses.id"), primary_key=True),
 )
+
 
 class Student(Base):
     __tablename__ = "students"
@@ -45,4 +47,3 @@ class Course(Base):
 
     def __repr__(self):
         return f"Course(id={self.id}, name={self.name}, description={self.description})"
-

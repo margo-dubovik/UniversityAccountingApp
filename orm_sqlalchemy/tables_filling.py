@@ -2,7 +2,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 import random
 
-from models import Group, association_table, Student, Course
+from models import Group, Student, Course
 from generator_source import group_names, course_names
 from generating_data import assign_to_groups
 

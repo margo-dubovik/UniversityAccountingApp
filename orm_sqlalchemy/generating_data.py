@@ -12,7 +12,7 @@ def assign_to_groups():
     while 200 - sum(students_in_group) > 30:
         students_in_group = random.sample(range(10, 30), 9)
     students_in_group.append(200 - sum(students_in_group))
-    # print(students_in_group)
+    print(students_in_group)
     random.shuffle(students)
     group_lists = {}
     for i, num in enumerate(students_in_group):
@@ -25,6 +25,6 @@ def assign_to_groups():
 if __name__ == '__main__':
     groups_dict = assign_to_groups()
     # print(json.dumps(group_lists, indent=1))
-    # for groupname in groups_dict.keys():
-    #     print(groupname+":")
+    # for group_number, groupname in enumerate(groups_dict.keys(), 1):
+    #     print(group_number, '. ',groupname,":")
     #     print(groups_dict[groupname])
