@@ -25,8 +25,6 @@ def assign_to_groups():
 if __name__ == '__main__':
     groups_dict = assign_to_groups()
     # print(json.dumps(group_lists, indent=1))
-    for groupname in groups_dict.keys():
-        print(groupname+":")
-        print(groups_dict[groupname])
-        # for student in groups_dict[groupname]:
-        #     print(student)
+    # for groupname in groups_dict.keys():
+    #     print(groupname+":")
+    #     print(groups_dict[groupname])
