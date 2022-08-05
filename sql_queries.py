@@ -14,10 +14,8 @@ def find_groups_by_students_count(count):
     with Session() as session:
         subq = select(Group.name, func.count(Student.group_id).label('n_students')) \
             .join(Student).group_by(Group.id).subquery()
-        students_counted = session.query(subq).filter(subq.c.n_students <= count).all()
-        print("-"*70)
-        print(f"groups with <={count} students:")
-        print(students_counted)
+        groups_counted = session.query(subq).filter(subq.c.n_students <= count).all()
+    return groups_counted
 
 
 # Find all students related to the course with a given name.
@@ -84,12 +82,15 @@ def remove_student_from_course(student_id, course_id):
 
 
 if __name__ == '__main__':
-    find_groups_by_students_count(21)
-    students_on_course("Discrete Math")
-    add_new_student(first_name="Harry", last_name="Styles", group_id=10, courses_ids=[4, 6, 7])
-    add_student_to_course(201, 5)
-    remove_student_from_course(201, 5)
-    remove_student(201)
+    groups_counted = find_groups_by_students_count(21)
+    print("-" * 70)
+    print(f"groups with <=21 students:")
+    print(groups_counted)
+    # students_on_course("Discrete Math")
+    # add_new_student(first_name="Harry", last_name="Styles", group_id=10, courses_ids=[4, 6, 7])
+    # add_student_to_course(201, 5)
+    # remove_student_from_course(201, 5)
+    # remove_student(201)
 
 # number of students in each group:  (group № 10 is empty)
 # [(8, 22), (9, 23), (7, 27), (1, 12), (5, 20), (4, 28), (2, 29), (6, 26), (3, 13)]
