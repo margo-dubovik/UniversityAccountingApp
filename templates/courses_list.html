@@ -1,0 +1,8 @@
+{% extends 'layout.html' %}
+{% block content %}
+<ul>
+    {% for name in  courses_dict.keys()%}
+    <li><a href="{{ url_for('students_on_course', coursename=name) }}">{{courses_dict[name]}}</a></li>
+    {% endfor %}
+</ul>
+{% endblock content %}

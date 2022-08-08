@@ -68,7 +68,6 @@ def add_student_to_course(Session, student_id, course_id):
 def remove_student_from_course(Session, student_id, course_id):
     with Session() as session:
         the_student = session.query(Student).get(student_id)
-        student_courses = the_student.courses
         the_course = session.query(Course).get(course_id)
         the_course.students.remove(the_student)
         session.commit()

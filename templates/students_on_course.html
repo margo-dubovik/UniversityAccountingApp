@@ -1,0 +1,9 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1>Students on {{ coursename }} course</h1>
+<ul>
+    {% for student in  students_lst %}
+    <li>{{ student[0] }} {{ student[1] }}</li>
+    {% endfor %}
+</ul>
+{% endblock content %}

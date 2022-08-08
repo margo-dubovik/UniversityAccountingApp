@@ -53,6 +53,16 @@ class Course(db.Model):
     def __repr__(self):
         return f"Course(id={self.id}, name={self.name}, description={self.description})"
 
+courses_dict = {"discrete_math": "Discrete Math",
+                "physics" : "Physics",
+                "math_analysis": "Math Analysis",
+                "english" : "English",
+                "programming": "Programming",
+                "symmetric_cryptography": "Symmetric Cryptography",
+                "asymmetric_cryptography": "Asymmetric Cryptography",
+                "combinatorial_analysis": "Combinatorial Analysis",
+                "algorithms": "Algorithms",
+                "statistics" : "Statistics"}
 
 @app.route('/')
 def base():
@@ -82,6 +92,18 @@ def all_groups():
 def all_courses():
     the_courses = Course.query.all()
     return render_template("courses_table.html", the_courses=the_courses, title="Courses")
+
+@app.route('/courses/as_list')
+def list_courses():
+    return render_template("courses_list.html", courses_dict=courses_dict)
+
+@app.route('/courses/<coursename>/students')
+def students_on_course(coursename):
+    course_full_name = courses_dict[coursename]
+    students_lst = db.session.query(Student.first_name, Student.last_name).join(association_table).join(Course) \
+        .filter(Course.name == course_full_name).all()
+    return render_template("students_on_course.html", students_lst=students_lst, coursename=course_full_name)
+
 
 
 
