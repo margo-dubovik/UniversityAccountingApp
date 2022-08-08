@@ -1,12 +1,13 @@
 {% extends 'layout.html' %}
 {% block content %}
+<h1>Information about courses:</h1>
 <ul>
     {% for name in  courses_dict.keys()%}
     <li>
         <p>{{courses_dict[name]}}:
-            <a href="{{ url_for('students_on_course', coursename=name) }}">view students</a>
-            <a href="{{ url_for('add_student_to_course', coursename=name) }}">add student</a>
-            <a href="{{ url_for('remove_student_from_course', coursename=name) }}">remove student</a>
+            <a href="{{ url_for('students_on_course', coursename=name) }}">View students</a>,
+            <a href="{{ url_for('add_student_to_course', coursename=name) }}">Add student</a>,
+            <a href="{{ url_for('remove_student_from_course', coursename=name) }}">Remove student</a>.
         </p>
     </li>
 

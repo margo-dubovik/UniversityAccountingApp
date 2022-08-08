@@ -68,7 +68,7 @@ courses_dict = {"discrete_math": "Discrete Math",
 
 @app.route('/')
 def base():
-    return render_template("base.html")
+    return render_template("base.html", title="University")
 
 
 @app.route('/students/')
@@ -77,17 +77,10 @@ def all_students():
     return render_template("students_table.html", the_students=the_students, title="Students")
 
 
-@app.route('/groups/', methods=['GET'])
+@app.route('/groups/')
 def all_groups():
-    count = request.args.get('count')
-    if count is None:
-        the_groups = Group.query.all()
-        return render_template("groups_table.html", the_groups=the_groups, title="Groups")
-    # else:
-    #     groups_counted = db.session.query(Group.id, Group.name, func.count(Student.group_id).label('n_students')) \
-    #         .join(Student).group_by(Group.id).having(func.count(Student.group_id) <= count).all()
-    #     return render_template("groups_by_count.html", groups_counted=groups_counted, the_count=count,
-    #                            title="Groups by count")
+    the_groups = Group.query.all()
+    return render_template("groups_table.html", the_groups=the_groups, title="Groups")
 
 @app.route('/groups/by_count', methods=['GET','POST'])
 def groups_by_count():
@@ -110,7 +103,7 @@ def all_courses():
 
 @app.route('/courses/as_list')
 def list_courses():
-    return render_template("courses_list.html", courses_dict=courses_dict)
+    return render_template("courses_list.html", courses_dict=courses_dict, title="Courses list")
 
 
 @app.route('/courses/<coursename>/students')
@@ -125,7 +118,7 @@ def students_on_course(coursename):
 @app.route('/students/add', methods=['GET', 'POST'])
 def add_new_student():
     if request.method == 'GET':
-        return render_template("add_new_student.html", title="Add new student")
+        return render_template("add_new_student.html", title="Add student")
 
     elif request.method == 'POST':
         first_name = request.form['first_name']
@@ -147,7 +140,7 @@ def add_new_student():
 @app.route('/students/delete', methods=['GET', 'POST'])
 def delete_student():
     if request.method == 'GET':
-        return render_template("delete_student.html", title="Delete a student")
+        return render_template("delete_student.html", title="Delete student")
 
     elif request.method == 'POST':
         the_id = request.form['stud_id']
