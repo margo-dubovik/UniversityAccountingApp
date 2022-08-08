@@ -1,9 +1,22 @@
 {% extends 'layout.html' %}
 {% block content %}
 <h1>Students on {{ coursename }} course</h1>
-<ul>
-    {% for student in  students_lst %}
-    <li>{{ student[0] }} {{ student[1] }}</li>
-    {% endfor %}
-</ul>
+<table  style="margin-left: 20px;">
+    <thead>
+        <tr>
+            <th>student id</th>
+            <th>first name</th>
+            <th>last name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in  students_lst %}
+        <tr>
+            <td>{{ student[0] }}</td>
+            <td>{{ student[1] }}</td>
+            <td>{{ student[2] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock content %}

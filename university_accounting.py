@@ -83,11 +83,23 @@ def all_groups():
     if count is None:
         the_groups = Group.query.all()
         return render_template("groups_table.html", the_groups=the_groups, title="Groups")
-    else:
+    # else:
+    #     groups_counted = db.session.query(Group.id, Group.name, func.count(Student.group_id).label('n_students')) \
+    #         .join(Student).group_by(Group.id).having(func.count(Student.group_id) <= count).all()
+    #     return render_template("groups_by_count.html", groups_counted=groups_counted, the_count=count,
+    #                            title="Groups by count")
+
+@app.route('/groups/by_count', methods=['GET','POST'])
+def groups_by_count():
+    if request.method == 'GET':
+        return render_template("groups_by_count.html", title="Groups by count", display_groups=False)
+
+    elif request.method == 'POST':
+        count = request.form['count']
         groups_counted = db.session.query(Group.id, Group.name, func.count(Student.group_id).label('n_students')) \
             .join(Student).group_by(Group.id).having(func.count(Student.group_id) <= count).all()
-        return render_template("groups_by_count.html", groups_counted=groups_counted, the_count=count,
-                               title="Groups by count")
+        return render_template("groups_by_count.html", display_groups=True, groups_counted=groups_counted,
+                               the_count=count, title="Groups by count")
 
 
 @app.route('/courses/')
@@ -104,7 +116,8 @@ def list_courses():
 @app.route('/courses/<coursename>/students')
 def students_on_course(coursename):
     course_full_name = courses_dict[coursename]
-    students_lst = db.session.query(Student.first_name, Student.last_name).join(association_table).join(Course) \
+    students_lst = db.session.query(Student.id, Student.first_name, Student.last_name).join(association_table)\
+        .join(Course) \
         .filter(Course.name == course_full_name).all()
     return render_template("students_on_course.html", students_lst=students_lst, coursename=course_full_name)
 
@@ -191,7 +204,6 @@ def remove_student_from_course():
         except:
             db.session.rollback()
             return "DB COMMIT FAILED!"
-
 
 
 if __name__ == '__main__':
