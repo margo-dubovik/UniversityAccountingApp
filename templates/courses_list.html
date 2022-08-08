@@ -2,7 +2,13 @@
 {% block content %}
 <ul>
     {% for name in  courses_dict.keys()%}
-    <li><a href="{{ url_for('students_on_course', coursename=name) }}">{{courses_dict[name]}}</a></li>
+    <li>
+        <p>{{courses_dict[name]}}:
+            <a href="{{ url_for('students_on_course', coursename=name) }}">view students</a>
+            <a href="{{ url_for('add_student_to_course', coursename=name) }}">add student</a>
+        </p>
+    </li>
+
     {% endfor %}
 </ul>
 {% endblock content %}

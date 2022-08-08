@@ -130,6 +130,7 @@ def add_new_student():
             db.session.rollback()
             return "DB COMMIT FAILED!"
 
+
 @app.route('/students/delete', methods=['GET', 'POST'])
 def delete_student():
     if request.method == 'GET':
@@ -138,7 +139,7 @@ def delete_student():
     elif request.method == 'POST':
         the_id = request.form['stud_id']
         try:
-            the_student = db.session.query(Student).get(the_id)
+            the_student = Student.query.get(the_id)
             student_courses = the_student.courses
             for course in student_courses:
                 course.students.remove(the_student)
@@ -148,6 +149,26 @@ def delete_student():
         except:
             db.session.rollback()
             return "DB COMMIT FAILED!"
+
+
+@app.route('/courses/students/add', methods=['GET', 'POST'])
+def add_student_to_course():
+    if request.method == 'GET':
+        return render_template("add_student_to_course.html", title="Add student to course")
+
+    elif request.method == 'POST':
+        student_id = request.form['student_id']
+        course_id = int(request.form['course_id'])
+        try:
+            the_course = Course.query.get(course_id)
+            the_student = Student.query.get(student_id)
+            the_course.students.append(the_student)
+            db.session.commit()
+            return f"Student with id={student_id} added to {list(courses_dict.values())[course_id - 1]} course!"
+        except:
+            db.session.rollback()
+            return "DB COMMIT FAILED!"
+
 
 if __name__ == '__main__':
     app.run(debug=True)
