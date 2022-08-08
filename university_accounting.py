@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:default@localhost:5432/university_db'
@@ -12,6 +13,8 @@ class Group(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(5))
+
+    students = db.relationship("Student", backref='groups')
 
     def __repr__(self):
         return f"Group(id={self.id}, name={self.name})"
@@ -62,16 +65,25 @@ def all_students():
     return render_template("students_table.html", the_students=the_students, title="Students")
 
 
-@app.route('/groups/')
+@app.route('/groups/', methods=['GET'])
 def all_groups():
-    the_groups = Group.query.all()
-    return render_template("groups_table.html", the_groups=the_groups, title="Groups")
+    count = request.args.get('count')
+    if count is None:
+        the_groups = Group.query.all()
+        return render_template("groups_table.html", the_groups=the_groups, title="Groups")
+    else:
+        groups_counted = db.session.query(Group.id, Group.name, func.count(Student.group_id).label('n_students')) \
+            .join(Student).group_by(Group.id).having(func.count(Student.group_id) <= count).all()
+        return render_template("groups_by_count.html", groups_counted=groups_counted, the_count=count,
+                               title="Groups by count")
 
 
 @app.route('/courses/')
 def all_courses():
     the_courses = Course.query.all()
     return render_template("courses_table.html", the_courses=the_courses, title="Courses")
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
