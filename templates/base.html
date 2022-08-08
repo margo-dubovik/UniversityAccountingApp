@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1>Welcome to the university db!</h1>
+<h2>What do you want to see?</h2>
+<ul>
+    <li><a href="{{ url_for('all_students') }}">students table</a></li>
+    <li><a href="{{ url_for('all_groups') }}">groups table</a></li>
+    <li><a href="{{ url_for('all_courses') }}">courses table</a></li>
+</ul>
+{% endblock content %}

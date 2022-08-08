@@ -1,7 +1,7 @@
 import pytest
 
 from sql_queries import *
-from orm_sqlalchemy.models import Base, Group, association_table, Student, Course
+from orm_sqlalchemy.models import Base, Group, Student, Course
 from orm_sqlalchemy.generator_source import group_names, course_names
 
 

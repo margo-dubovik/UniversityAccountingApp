@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+{% block content %}
+<table  style="margin-left: 20px;">
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>group id</th>
+            <th>first name</th>
+            <th>last name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for stud in the_students %}
+        <tr>
+            <td>{{ stud.id }}</td>
+            <td>{{ stud.group_id }}</td>
+            <td>{{ stud.first_name }}</td>
+            <td>{{ stud.last_name }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}

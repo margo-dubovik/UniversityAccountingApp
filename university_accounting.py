@@ -1,0 +1,77 @@
+from flask import Flask, render_template, request
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:default@localhost:5432/university_db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+
+class Group(db.Model):
+    __tablename__ = "groups"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(5))
+
+    def __repr__(self):
+        return f"Group(id={self.id}, name={self.name})"
+
+
+association_table = db.Table(
+    "association",
+    db.Column("student_id", db.ForeignKey("students.id"), primary_key=True),
+    db.Column("course_id", db.ForeignKey("courses.id"), primary_key=True),
+)
+
+
+class Student(db.Model):
+    __tablename__ = "students"
+
+    id = db.Column(db.Integer, primary_key=True)
+    group_id = db.Column(db.Integer, db.ForeignKey("groups.id"), nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+
+    courses = db.relationship(
+        "Course", secondary=association_table, backref="students"
+    )
+
+    def __repr__(self):
+        return f"Student(id={self.id}, group_id={self.group_id}, first_name={self.first_name}, last_name={self.last_name})"
+
+
+class Course(db.Model):
+    __tablename__ = "courses"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(250), nullable=False)
+
+    def __repr__(self):
+        return f"Course(id={self.id}, name={self.name}, description={self.description})"
+
+
+@app.route('/')
+def base():
+    return render_template("base.html")
+
+
+@app.route('/students/')
+def all_students():
+    the_students = Student.query.all()
+    return render_template("students_table.html", the_students=the_students, title="Students")
+
+
+@app.route('/groups/')
+def all_groups():
+    the_groups = Group.query.all()
+    return render_template("groups_table.html", the_groups=the_groups, title="Groups")
+
+
+@app.route('/courses/')
+def all_courses():
+    the_courses = Course.query.all()
+    return render_template("courses_table.html", the_courses=the_courses, title="Courses")
+
+if __name__ == '__main__':
+    app.run(debug=True)

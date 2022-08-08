@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+{% block content %}
+<table  style="margin-left: 20px;">
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>name</th>
+            <th>course description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for course in the_courses %}
+        <tr>
+            <td>{{ course.id }}</td>
+            <td>{{ course.name }}</td>
+            <td>{{ course.description }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}
