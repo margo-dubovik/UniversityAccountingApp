@@ -8,5 +8,7 @@
     <li><a href="{{ url_for('all_courses') }}">courses table</a></li>
     <li><a href="{{ url_for('all_groups') }}?count=20">groups with 20 or less students</a></li>
     <li><a href="{{ url_for('list_courses') }}">all students related to the course with a given name</a></li>
+    <li><a href="{{ url_for('add_new_student') }}">add new student</a></li>
+    <li><a href="{{ url_for('delete_student') }}">delete student by id</a></li>
 </ul>
 {% endblock content %}

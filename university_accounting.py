@@ -53,16 +53,18 @@ class Course(db.Model):
     def __repr__(self):
         return f"Course(id={self.id}, name={self.name}, description={self.description})"
 
+
 courses_dict = {"discrete_math": "Discrete Math",
-                "physics" : "Physics",
+                "physics": "Physics",
                 "math_analysis": "Math Analysis",
-                "english" : "English",
+                "english": "English",
                 "programming": "Programming",
                 "symmetric_cryptography": "Symmetric Cryptography",
                 "asymmetric_cryptography": "Asymmetric Cryptography",
                 "combinatorial_analysis": "Combinatorial Analysis",
                 "algorithms": "Algorithms",
-                "statistics" : "Statistics"}
+                "statistics": "Statistics"}
+
 
 @app.route('/')
 def base():
@@ -93,9 +95,11 @@ def all_courses():
     the_courses = Course.query.all()
     return render_template("courses_table.html", the_courses=the_courses, title="Courses")
 
+
 @app.route('/courses/as_list')
 def list_courses():
     return render_template("courses_list.html", courses_dict=courses_dict)
+
 
 @app.route('/courses/<coursename>/students')
 def students_on_course(coursename):
@@ -105,7 +109,45 @@ def students_on_course(coursename):
     return render_template("students_on_course.html", students_lst=students_lst, coursename=course_full_name)
 
 
+@app.route('/students/add', methods=['GET', 'POST'])
+def add_new_student():
+    if request.method == 'GET':
+        return render_template("add_new_student.html", title="Add new student")
 
+    elif request.method == 'POST':
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        group_id = request.form['group_id']
+        courses_ids = [int(id) for id in request.form['courses_ids'].split(',')]
+        try:
+            max_id = db.session.query(func.max(Student.id)).scalar()
+            new_student = Student(id=max_id + 1, first_name=first_name, last_name=last_name, group_id=group_id,
+                                  courses=[db.session.query(Course).get(course_id) for course_id in courses_ids])
+            db.session.add(new_student)
+            db.session.commit()
+            return "New student added successfully!"
+        except:
+            db.session.rollback()
+            return "DB COMMIT FAILED!"
+
+@app.route('/students/delete', methods=['GET', 'POST'])
+def delete_student():
+    if request.method == 'GET':
+        return render_template("delete_student.html", title="Delete a student")
+
+    elif request.method == 'POST':
+        the_id = request.form['stud_id']
+        try:
+            the_student = db.session.query(Student).get(the_id)
+            student_courses = the_student.courses
+            for course in student_courses:
+                course.students.remove(the_student)
+            db.session.delete(the_student)
+            db.session.commit()
+            return f"Student with id={the_id} deleted successfully!"
+        except:
+            db.session.rollback()
+            return "DB COMMIT FAILED!"
 
 if __name__ == '__main__':
     app.run(debug=True)
