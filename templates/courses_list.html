@@ -6,6 +6,7 @@
         <p>{{courses_dict[name]}}:
             <a href="{{ url_for('students_on_course', coursename=name) }}">view students</a>
             <a href="{{ url_for('add_student_to_course', coursename=name) }}">add student</a>
+            <a href="{{ url_for('remove_student_from_course', coursename=name) }}">remove student</a>
         </p>
     </li>
 

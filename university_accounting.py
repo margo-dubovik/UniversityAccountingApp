@@ -154,7 +154,7 @@ def delete_student():
 @app.route('/courses/students/add', methods=['GET', 'POST'])
 def add_student_to_course():
     if request.method == 'GET':
-        return render_template("add_student_to_course.html", title="Add student to course")
+        return render_template("student_course_operations.html", title="Add student to course")
 
     elif request.method == 'POST':
         student_id = request.form['student_id']
@@ -168,6 +168,30 @@ def add_student_to_course():
         except:
             db.session.rollback()
             return "DB COMMIT FAILED!"
+
+
+@app.route('/courses/students/remove', methods=['GET', 'POST'])
+def remove_student_from_course():
+    if request.method == 'GET':
+        return render_template("student_course_operations.html", title="Remove student from course")
+
+    elif request.method == 'POST':
+        student_id = request.form['student_id']
+        course_id = int(request.form['course_id'])
+        try:
+            the_student = db.session.query(Student).get(student_id)
+            the_course = db.session.query(Course).get(course_id)
+            if the_student not in the_course.students:
+                return f"Error!\n" \
+                       f"Student with id={student_id} not in {list(courses_dict.values())[course_id - 1]} course!"
+            else:
+                the_course.students.remove(the_student)
+                db.session.commit()
+                return f"Student with id={student_id} removed from {list(courses_dict.values())[course_id - 1]} course!"
+        except:
+            db.session.rollback()
+            return "DB COMMIT FAILED!"
+
 
 
 if __name__ == '__main__':
