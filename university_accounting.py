@@ -168,9 +168,13 @@ def add_student_to_course():
         try:
             the_course = Course.query.get(course_id)
             the_student = Student.query.get(student_id)
-            the_course.students.append(the_student)
-            db.session.commit()
-            return f"Student with id={student_id} added to {list(courses_dict.values())[course_id - 1]} course!"
+            if the_student in the_course.students:
+                return f"Error!\n" \
+                       f"Student with id={student_id} is already in {list(courses_dict.values())[course_id - 1]} course!"
+            else:
+                the_course.students.append(the_student)
+                db.session.commit()
+                return f"Student with id={student_id} added to {list(courses_dict.values())[course_id - 1]} course!"
         except:
             db.session.rollback()
             return "DB COMMIT FAILED!"
