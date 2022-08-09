@@ -262,8 +262,172 @@ class StudentsOnCourse(Resource):
             return abort(500, message="DB commit failed")
 
 
+class StudentsOperations(Resource):
+    def get(self):
+        """
+        Display all students.
+        ----
+        tags:
+        - students
+        parameters:
+        - name: "format"
+          in: "query"
+          description: "Format of response"
+          required: true
+          type: "string"
+          enum:
+            - "json"
+            - "xml"
+        responses:
+          "200":
+            description: "successful operation"
+          "400":
+            description: "Invalid status value"
+        """
+        fmt = request.args.get('format')
+        the_students = Student.query.all()
+        result_dict = {f"student_{student.id}":
+                           {'student_id': str(student.id),
+                            'group_id': str(student.group_id),
+                            'first_name': student.first_name,
+                            'last_name': student.last_name}
+                       for student in the_students}
+        if fmt == 'xml':
+            return output_xml(result_dict, 200, headers={'Content-Type': 'text/xml'})
+        elif fmt == 'json':
+            return output_json(result_dict, 200, headers={'Content-Type': 'application/json'})
+        else:
+            return abort(400, message='Bad Request')
+
+    def post(self):
+        """
+        Add a new student.
+        ----
+        tags:
+        - students
+        parameters:
+        - name: "first_name"
+          in: "query"
+          description: "First name of a student to add"
+          required: true
+          type: "string"
+        - name: "last_name"
+          in: "query"
+          description: "Last name of a student to add"
+          required: true
+          type: "string"
+        - name: "group_id"
+          in: "query"
+          description: "ID of a group the student will be added to"
+          required: true
+          type: "integer"
+        - name: "courses_ids"
+          in: "query"
+          description: "A comma-separated list of courses IDs (numbers 1-10)"
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+            minItems: 1
+          style: simple
+          explode: true
+        - name: "format"
+          in: "query"
+          description: "Format of response"
+          required: true
+          type: "string"
+          enum:
+            - "json"
+            - "xml"
+        responses:
+          "200":
+            description: "Successful operation"
+          "400":
+            description: "Bad Request"
+          "500":
+            description: "Internal server error"
+        """
+        fmt = request.args.get('format')
+        first_name = request.args.get('first_name')
+        last_name = request.args.get('last_name')
+        group_id = request.args.get('group_id')
+        courses_ids = [int(id) for id in request.args.get('courses_ids').split(',')]
+        try:
+            max_id = db.session.query(func.max(Student.id)).scalar()
+            new_student = Student(id=max_id + 1, first_name=first_name, last_name=last_name, group_id=group_id,
+                                  courses=[Course.query.get(course_id) for course_id in courses_ids])
+            db.session.add(new_student)
+            db.session.commit()
+            result_dict = {'code': 200,
+                           'message': "New student added successfully!",
+                           'student_id': str(max_id + 1),
+                           'courses_ids': str(courses_ids),
+                           'group_id': str(group_id),
+                           'first_name': first_name,
+                           'last_name': last_name}
+            if fmt == 'xml':
+                return output_xml(result_dict, result_dict['code'], headers={'Content-Type': 'text/xml'})
+            elif fmt == 'json':
+                return output_json(result_dict, result_dict['code'], headers={'Content-Type': 'application/json'})
+        except:
+            db.session.rollback()
+            return abort(500, message="DB commit failed")
+
+    def delete(self):
+        """
+        Remove a student from the course with a given name.
+        ----
+        tags:
+        - students
+        parameters:
+        - name: "student_id"
+          in: "query"
+          description: "ID of student to add"
+          required: true
+          type: "integer"
+        - name: "format"
+          in: "query"
+          description: "Format of response"
+          required: true
+          type: "string"
+          enum:
+            - "json"
+            - "xml"
+        responses:
+          "200":
+            description: "successful operation"
+          "400":
+            description: "Invalid status value"
+        """
+        the_id = request.args.get('student_id')
+        fmt = request.args.get('format')
+        try:
+            the_student = Student.query.get(the_id)
+            if the_student:
+                student_courses = the_student.courses
+                for course in student_courses:
+                    course.students.remove(the_student)
+                db.session.delete(the_student)
+                db.session.commit()
+                result_dict = {"code": 200,
+                               "message": f"Student with id={the_id} deleted successfully!"}
+            else:
+                result_dict = {"code": 400,
+                               "message": f"Student with id={the_id} is not in the db!"}
+            if fmt == 'xml':
+                return output_xml(result_dict, result_dict['code'], headers={'Content-Type': 'text/xml'})
+            elif fmt == 'json':
+                return output_json(result_dict, result_dict['code'], headers={'Content-Type': 'application/json'})
+        except:
+            db.session.rollback()
+            return abort(500, message="DB commit failed")
+
+
+
 api.add_resource(GroupsByCount, '/api/v1/groups/by_count')
 api.add_resource(StudentsOnCourse, '/api/v1/courses/<coursename>/students')
+api.add_resource(StudentsOperations, '/api/v1/students/')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

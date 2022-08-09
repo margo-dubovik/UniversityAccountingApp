@@ -128,7 +128,7 @@ def add_new_student():
         try:
             max_id = db.session.query(func.max(Student.id)).scalar()
             new_student = Student(id=max_id + 1, first_name=first_name, last_name=last_name, group_id=group_id,
-                                  courses=[db.session.query(Course).get(course_id) for course_id in courses_ids])
+                                  courses=[Course.query.get(course_id) for course_id in courses_ids])
             db.session.add(new_student)
             db.session.commit()
             return "New student added successfully!"
@@ -146,12 +146,15 @@ def delete_student():
         the_id = request.form['stud_id']
         try:
             the_student = Student.query.get(the_id)
-            student_courses = the_student.courses
-            for course in student_courses:
-                course.students.remove(the_student)
-            db.session.delete(the_student)
-            db.session.commit()
-            return f"Student with id={the_id} deleted successfully!"
+            if the_student:
+                student_courses = the_student.courses
+                for course in student_courses:
+                    course.students.remove(the_student)
+                db.session.delete(the_student)
+                db.session.commit()
+                return f"Student with id={the_id} deleted successfully!"
+            else:
+                return f"Student with id={the_id} is not in the db!"
         except:
             db.session.rollback()
             return "DB COMMIT FAILED!"
