@@ -20,22 +20,6 @@ groups_dict = {"FI-83":
 
 
 def test_groupsbycount(client, testdb_filled):
-    # testdb.session.add_all([Group(id=i, name=name) for i, name in enumerate(group_names[:3], 1)])
-    # testdb.session.flush()
-    #
-    # testdb.session.add_all(
-    #     [Course(id=i, name=course[0], description=course[1]) for i, course in enumerate(course_names[:4], 1)])
-    # testdb.session.flush()
-    #
-    # i = 0
-    # for group_number, groupname in enumerate(groups_dict.keys(), 1):
-    #     for student in groups_dict[groupname]:
-    #         courses = student[2]
-    #         testdb.session.add(Student(id=i + 1, first_name=student[0], last_name=student[1], group_id=group_number,
-    #                                    courses=[testdb.session.query(Course).get(course_id) for course_id in courses]))
-    #         i += 1
-    # testdb.session.commit()
-
     response = client.get("/api/v1/groups/by_count?count=3&format=json")
     assert response.status_code == 200
     assert json.loads(response.get_data()) == json_groupsbycount
