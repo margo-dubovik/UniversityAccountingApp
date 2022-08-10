@@ -1,4 +1,4 @@
-json_groupsbycount ={
+json_groupsbycount = {
     "response": {
         "group_2": {
             "group_id": "2",
@@ -28,3 +28,85 @@ xml_groupsbycount = """<?xml version="1.0" encoding="UTF-8" ?>
       </group_3>
     </response>
   </root>"""
+
+json_studentsoncourse = {
+    "response": {
+        "student_2": {
+            "student_id": "2",
+            "first_name": "Helen",
+            "last_name": "Turner"
+        },
+        "student_5": {
+            "student_id": "5",
+            "first_name": "Andrew",
+            "last_name": "Turner"
+        },
+        "student_8": {
+            "student_id": "8",
+            "first_name": "Alan",
+            "last_name": "Turing"
+        }
+    }
+}
+
+xml_studentsoncourse = """<?xml version="1.0" encoding="UTF-8" ?>
+  <root>
+    <response>
+      <student_2>
+        <student_id>2</student_id>
+        <first_name>Helen</first_name>
+        <last_name>Turner</last_name>
+      </student_2>
+      <student_5>
+        <student_id>5</student_id>
+        <first_name>Andrew</first_name>
+        <last_name>Turner</last_name>
+      </student_5>
+      <student_8>
+        <student_id>8</student_id>
+        <first_name>Alan</first_name>
+        <last_name>Turing</last_name>
+      </student_8>
+    </response>
+  </root>"""
+
+json_studentsoncourse_post = {
+    "response": {
+        "code": 200,
+        "message":
+            f"Student with id=9 added "
+            f"to Physics course!"}
+}
+
+# xml_studentsoncourse_post = """<?xml version="1.0" encoding="UTF-8" ?>
+#   <root>
+#     <response>
+#     <code>200</code>
+#     <message>Student with id=9 added to Physics course!<message>
+#     </response>
+#   </root>"""
+
+json_studentsoncourse_updated = json_studentsoncourse = {
+    "response": {
+        "student_2": {
+            "student_id": "2",
+            "first_name": "Helen",
+            "last_name": "Turner"
+        },
+        "student_5": {
+            "student_id": "5",
+            "first_name": "Andrew",
+            "last_name": "Turner"
+        },
+        "student_8": {
+            "student_id": "8",
+            "first_name": "Alan",
+            "last_name": "Turing"
+        },
+        "student_9": {
+            "student_id": "9",
+            "first_name": "Sophia",
+            "last_name": "Roberts"
+        }
+    }
+}
