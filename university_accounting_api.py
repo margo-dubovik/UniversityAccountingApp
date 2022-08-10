@@ -252,7 +252,7 @@ class StudentsOnCourse(Resource):
                 result_dict = {"code": 200,
                                "message":
                                    f"Student with id={student_id} removed "
-                                   f"to {list(courses_dict.values())[course_id - 1]} course!"}
+                                   f"from {list(courses_dict.values())[course_id - 1]} course!"}
             if fmt == 'xml':
                 return output_xml(result_dict, result_dict['code'], headers={'Content-Type': 'text/xml'})
             elif fmt == 'json':

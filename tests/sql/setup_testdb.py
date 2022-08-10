@@ -6,7 +6,7 @@ from orm_sqlalchemy.models import Base, Group, Student, Course
 
 
 def seed_database():
-    with Session(bind=connection) as session:
+    with Session() as session:
         session.add_all([Group(id=i, name=name) for i, name in enumerate(group_names[:3], 1)])
 
         session.commit()
@@ -35,10 +35,10 @@ def seed_database():
 
 
 engine = create_engine("postgresql+psycopg2://postgres:default@localhost:5432/test_university_db")
-# connection = engine.connect()
-# Base.metadata.bind = connection
+connection = engine.connect()
+Base.metadata.bind = connection
 # Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 # seed_database()
 
-# Base.metadata.drop_all()
+Base.metadata.drop_all()

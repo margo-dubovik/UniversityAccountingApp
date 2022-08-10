@@ -70,13 +70,32 @@ xml_studentsoncourse = """<?xml version="1.0" encoding="UTF-8" ?>
     </response>
   </root>"""
 
-json_studentsoncourse_post = {
+json_studentsoncourse_post_ok = {
     "response": {
         "code": 200,
         "message":
-            f"Student with id=9 added "
-            f"to Physics course!"}
+            f"Student with id=1 added to Physics course!"}
 }
+
+json_studentsoncourse_alreadythere = {
+    "response": {
+        "code": 400,
+        "message": f"Student with id=1 is already in Physics course!"}
+}
+
+json_studentsoncourse_delete_ok = {
+    "response": {
+        "code": 200,
+        "message":
+            f"Student with id=1 removed from Physics course!"}
+}
+
+json_studentsoncourse_notin = {
+    "response": {
+        "code": 400,
+        "message": f"Student with id=1 is not in Physics course!"}
+}
+
 
 # xml_studentsoncourse_post = """<?xml version="1.0" encoding="UTF-8" ?>
 #   <root>
@@ -86,27 +105,27 @@ json_studentsoncourse_post = {
 #     </response>
 #   </root>"""
 
-json_studentsoncourse_updated = json_studentsoncourse = {
-    "response": {
-        "student_2": {
-            "student_id": "2",
-            "first_name": "Helen",
-            "last_name": "Turner"
-        },
-        "student_5": {
-            "student_id": "5",
-            "first_name": "Andrew",
-            "last_name": "Turner"
-        },
-        "student_8": {
-            "student_id": "8",
-            "first_name": "Alan",
-            "last_name": "Turing"
-        },
-        "student_9": {
-            "student_id": "9",
-            "first_name": "Sophia",
-            "last_name": "Roberts"
-        }
-    }
-}
+# json_studentsoncourse_updated = {
+#     "response": {
+#         "student_2": {
+#             "student_id": "2",
+#             "first_name": "Helen",
+#             "last_name": "Turner"
+#         },
+#         "student_5": {
+#             "student_id": "5",
+#             "first_name": "Andrew",
+#             "last_name": "Turner"
+#         },
+#         "student_8": {
+#             "student_id": "8",
+#             "first_name": "Alan",
+#             "last_name": "Turing"
+#         },
+#         "student_9": {
+#             "student_id": "9",
+#             "first_name": "Sophia",
+#             "last_name": "Roberts"
+#         }
+#     }
+# }
