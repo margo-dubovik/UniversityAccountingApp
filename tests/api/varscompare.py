@@ -96,6 +96,53 @@ json_studentsoncourse_notin = {
         "message": f"Student with id=1 is not in Physics course!"}
 }
 
+json_students = {
+    "response": {
+        "student_1": {
+            "student_id": "1",
+            "group_id": '1',
+            "first_name": "Helen",
+            "last_name": "Turner"
+        },
+        "student_2": {
+            "student_id": "2",
+            "group_id": '3',
+            "first_name": "Alan",
+            "last_name": "Turing"
+        }
+    }
+}
+
+xml_students = """<?xml version="1.0" encoding="UTF-8" ?>
+  <root>
+    <response>
+      <student_1>
+        <student_id>1</student_id>
+        <group_id>1</group_id>
+        <first_name>Helen</first_name>
+        <last_name>Turner</last_name>
+      </student_1>
+      <student_2>
+        <student_id>2</student_id>
+        <group_id>3</group_id>
+        <first_name>Alan</first_name>
+        <last_name>Turing</last_name>
+      </student_2>
+    </response>
+  </root>"""
+
+json_students_post_ok = {
+    "response": {
+        "code": 200,
+        "message": "New student added successfully!",
+        'student_id': "2",
+        'courses_ids': "[2, 3]",
+        'group_id': '3',
+        'first_name': 'Alan',
+        'last_name': 'Turing'}
+}
+
+
 
 # xml_studentsoncourse_post = """<?xml version="1.0" encoding="UTF-8" ?>
 #   <root>

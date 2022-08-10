@@ -41,4 +41,4 @@ Base.metadata.bind = connection
 Session = sessionmaker(bind=engine)
 # seed_database()
 
-Base.metadata.drop_all()
+# Base.metadata.drop_all()

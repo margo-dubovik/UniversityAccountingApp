@@ -327,6 +327,8 @@ class StudentsOperations(Resource):
           required: true
           schema:
             type: array
+            style: form
+            explode: false
             items:
               type: integer
             minItems: 1
@@ -427,7 +429,7 @@ class StudentsOperations(Resource):
 
 api.add_resource(GroupsByCount, '/api/v1/groups/by_count')
 api.add_resource(StudentsOnCourse, '/api/v1/courses/<coursename>/students')
-api.add_resource(StudentsOperations, '/api/v1/students/')
+api.add_resource(StudentsOperations, '/api/v1/students')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

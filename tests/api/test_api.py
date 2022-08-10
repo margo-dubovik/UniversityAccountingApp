@@ -111,3 +111,48 @@ def test_studentsoncourse_delete(client, testdb):
     assert response.status_code == 400
     assert json.loads(response.get_data()) == json_studentsoncourse_notin
 
+
+def test_studentsoperations_get(client, testdb):
+    testdb.session.add_all([Group(id=i, name=name) for i, name in enumerate(group_names[:3], 1)])
+    testdb.session.flush()
+
+    testdb.session.add_all(
+        [Course(id=i, name=course[0], description=course[1]) for i, course in enumerate(course_names[:4], 1)])
+    testdb.session.flush()
+
+    helen_courses = [2, 4]
+    helen = Student(id=1, first_name='Helen', last_name='Turner', group_id=1,
+                    courses=[testdb.session.query(Course).get(course_id) for course_id in helen_courses])
+    testdb.session.add(helen)
+    alan_courses = [2, 3]
+    alan = Student(id=2, first_name='Alan', last_name='Turing', group_id=3,
+                   courses=[testdb.session.query(Course).get(course_id) for course_id in alan_courses])
+    testdb.session.add(alan)
+    testdb.session.commit()
+
+    response = client.get("/api/v1/students?format=json")
+    assert response.status_code == 200
+    assert json.loads(response.get_data()) == json_students
+
+    response = client.get("/api/v1/students?format=xml")
+    assert response.status_code == 200
+    assert format_output(response.get_data(as_text=True)) == format_output(xml_students)
+
+
+def test_studentsoperations_post(client, testdb):
+    testdb.session.add_all([Group(id=i, name=name) for i, name in enumerate(group_names[:3], 1)])
+    testdb.session.flush()
+
+    testdb.session.add_all(
+        [Course(id=i, name=course[0], description=course[1]) for i, course in enumerate(course_names[:4], 1)])
+    testdb.session.flush()
+
+    helen_courses = [2, 4]
+    helen = Student(id=1, first_name='Helen', last_name='Turner', group_id=1,
+                    courses=[testdb.session.query(Course).get(course_id) for course_id in helen_courses])
+    testdb.session.add(helen)
+    testdb.session.commit()
+
+    response = client.post("/api/v1/students?first_name=Alan&last_name=Turing&group_id=3&courses_ids=2%2C3&format=json")
+    assert response.status_code == 200
+    assert json.loads(response.get_data()) == json_students_post_ok
