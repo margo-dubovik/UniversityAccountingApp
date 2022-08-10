@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response
+from flask import request, make_response
 from flask_restful import Resource, Api, abort
 from sqlalchemy import func
 
@@ -424,7 +424,6 @@ class StudentsOperations(Resource):
         except:
             db.session.rollback()
             return abort(500, message="DB commit failed")
-
 
 
 api.add_resource(GroupsByCount, '/api/v1/groups/by_count')

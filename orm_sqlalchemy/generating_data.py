@@ -1,7 +1,6 @@
 from generator_source import *
 
 import random
-import json
 
 
 def assign_to_groups():
@@ -24,7 +23,3 @@ def assign_to_groups():
 
 if __name__ == '__main__':
     groups_dict = assign_to_groups()
-    # print(json.dumps(group_lists, indent=1))
-    # for group_number, groupname in enumerate(groups_dict.keys(), 1):
-    #     print(group_number, '. ',groupname,":")
-    #     print(groups_dict[groupname])

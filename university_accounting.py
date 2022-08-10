@@ -82,7 +82,8 @@ def all_groups():
     the_groups = Group.query.all()
     return render_template("groups_table.html", the_groups=the_groups, title="Groups")
 
-@app.route('/groups/by_count', methods=['GET','POST'])
+
+@app.route('/groups/by_count', methods=['GET', 'POST'])
 def groups_by_count():
     if request.method == 'GET':
         return render_template("groups_by_count.html", title="Groups by count", display_groups=False)
@@ -109,7 +110,7 @@ def list_courses():
 @app.route('/courses/<coursename>/students')
 def students_on_course(coursename):
     course_full_name = courses_dict[coursename]
-    students_lst = db.session.query(Student.id, Student.first_name, Student.last_name).join(association_table)\
+    students_lst = db.session.query(Student.id, Student.first_name, Student.last_name).join(association_table) \
         .join(Course) \
         .filter(Course.name == course_full_name).all()
     return render_template("students_on_course.html", students_lst=students_lst, coursename=course_full_name)

@@ -1,8 +1,7 @@
-import pytest
 import json
 
 from tests.api.varscompare import *
-from university_accounting import Group, association_table, Student, Course, courses_dict
+from university_accounting import Group, Student, Course
 from orm_sqlalchemy.generator_source import group_names, course_names
 
 
