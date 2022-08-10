@@ -1,18 +1,15 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-from sqlalchemy import func, select, subquery
+from sqlalchemy import func, select
 
 from orm_sqlalchemy.models import Group, association_table, Student, Course
-
-
 
 
 # Find all groups with less or equals student count.
 def find_groups_by_students_count(Session, count):
     with Session() as session:
-        subq = select(Group.name, func.count(Student.group_id).label('n_students')) \
-            .join(Student).group_by(Group.id).subquery()
-        groups_counted = session.query(subq).filter(subq.c.n_students <= count).all()
+        groups_counted = session.query(Group.id, Group.name, func.count(Student.group_id).label('n_students')) \
+            .join(Student).group_by(Group.id).having(func.count(Student.group_id) <= count).all()
     return groups_counted
 
 
@@ -49,7 +46,7 @@ def remove_student(Session, the_id):
         session.delete(the_student)
         session.commit()
         print("-" * 70)
-        print(f"Student with id {the_id } successfully removed")
+        print(f"Student with id {the_id} successfully removed")
 
 
 # Add a student to the course (from a list)
