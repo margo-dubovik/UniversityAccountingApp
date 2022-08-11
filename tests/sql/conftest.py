@@ -5,10 +5,21 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from orm_sqlalchemy.generator_source import group_names, course_names
 from orm_sqlalchemy.models import Base, Group, Student, Course
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 @pytest.fixture(scope='session')
 def engine():
-    engine = create_engine("postgresql+psycopg2://postgres:default@localhost:5432/test_university_db")
+    engine = create_engine("postgresql+psycopg2://{}:{}@{}:{}/{}".format(
+        os.environ.get('TEST_DB_USERNAME'),
+        os.environ.get('TEST_DB_PASSWORD'),
+        os.environ.get('TEST_DB_HOST'),
+        os.environ.get('TEST_DB_PORT'),
+        os.environ.get('TEST_DB_NAME'),
+        )
+    )
     yield engine
 
 

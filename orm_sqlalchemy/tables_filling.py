@@ -6,7 +6,18 @@ from models import Group, Student, Course
 from generator_source import group_names, course_names
 from generating_data import assign_to_groups
 
-engine = create_engine('postgresql+psycopg2://postgres:default@localhost:5432/university_db', echo=True)
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+engine = create_engine("postgresql+psycopg2://{}:{}@{}:{}/{}".format(
+            os.environ.get('DB_USERNAME'),
+            os.environ.get('DB_PASSWORD'),
+            os.environ.get('DB_HOST'),
+            os.environ.get('DB_PORT'),
+            os.environ.get('DB_NAME'),
+        ), echo=True)
 
 Session = sessionmaker(bind=engine)
 

@@ -1,9 +1,19 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:default@localhost:5432/university_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+psycopg2://{}:{}@{}:{}/{}".format(
+            os.environ.get('DB_USERNAME'),
+            os.environ.get('DB_PASSWORD'),
+            os.environ.get('DB_HOST'),
+            os.environ.get('DB_PORT'),
+            os.environ.get('DB_NAME'),
+        )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 

@@ -4,6 +4,11 @@ from sqlalchemy import func
 
 from orm_sqlalchemy.models import Group, association_table, Student, Course
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 
 def find_groups_by_students_count(Session, count):
     """Find all groups with less or equals student count."""
@@ -71,7 +76,13 @@ def remove_student_from_course(Session, student_id, course_id):
 
 
 if __name__ == '__main__':
-    engine = create_engine('postgresql+psycopg2://postgres:default@localhost:5432/university_db', echo=True)
+    engine = create_engine("postgresql+psycopg2://{}:{}@{}:{}/{}".format(
+            os.environ.get('DB_USERNAME'),
+            os.environ.get('DB_PASSWORD'),
+            os.environ.get('DB_HOST'),
+            os.environ.get('DB_PORT'),
+            os.environ.get('DB_NAME'),
+        ), echo=True)
 
     Session = sessionmaker(bind=engine)
     groups_counted = find_groups_by_students_count(Session, 21)

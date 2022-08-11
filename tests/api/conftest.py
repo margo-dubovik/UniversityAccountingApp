@@ -4,6 +4,11 @@ import university_accounting_api
 
 from orm_sqlalchemy.generator_source import group_names, course_names
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 groups_dict = {"FI-83":
                    [['Alice', 'Evans', [1]], ['Helen', 'Turner', [2, 4]], ['Jack', 'Fox', [1, 3]],
                     ['Leo', 'Fisher', [3]]],
@@ -12,9 +17,16 @@ groups_dict = {"FI-83":
                "SA-72":
                    [['Alan', 'Turing', [1, 2, 3]], ['Sophia', 'Roberts', [1, 4]]]}
 
+
 @pytest.fixture(scope='session')
 def app():
-    db_uri = "postgresql+psycopg2://postgres:default@localhost:5432/test_university_db"
+    db_uri = "postgresql+psycopg2://{}:{}@{}:{}/{}".format(
+        os.environ.get('TEST_DB_USERNAME'),
+        os.environ.get('TEST_DB_PASSWORD'),
+        os.environ.get('TEST_DB_HOST'),
+        os.environ.get('TEST_DB_PORT'),
+        os.environ.get('TEST_DB_NAME'),
+    )
     university_accounting_api.app.config['TESTING'] = True
     university_accounting_api.app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     yield university_accounting_api.app
