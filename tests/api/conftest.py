@@ -1,10 +1,7 @@
 import pytest
 
-from flask_sqlalchemy import SQLAlchemy
-
 import university_accounting_api
 
-# from university_accounting import Group, association_table, Student, Course, courses_dict
 from orm_sqlalchemy.generator_source import group_names, course_names
 
 groups_dict = {"FI-83":
@@ -31,54 +28,9 @@ def client(app):
 
 @pytest.fixture(scope='function')
 def testdb(app):
-    db = SQLAlchemy(app)
-
-    print("\ndb connected")
-
-    class Group(db.Model):
-        __tablename__ = "groups"
-
-        id = db.Column(db.Integer, primary_key=True)
-        name = db.Column(db.String(5))
-
-        students = db.relationship("Student", backref='groups')
-
-        def __repr__(self):
-            return f"Group(id={self.id}, name={self.name})"
-
-    association_table = db.Table(
-        "association",
-        db.Column("student_id", db.ForeignKey("students.id"), primary_key=True),
-        db.Column("course_id", db.ForeignKey("courses.id"), primary_key=True),
-    )
-
-    class Student(db.Model):
-        __tablename__ = "students"
-
-        id = db.Column(db.Integer, primary_key=True)
-        group_id = db.Column(db.Integer, db.ForeignKey("groups.id"), nullable=False)
-        first_name = db.Column(db.String(50), nullable=False)
-        last_name = db.Column(db.String(50), nullable=False)
-
-        courses = db.relationship(
-            "Course", secondary=association_table, backref="students"
-        )
-
-        def __repr__(self):
-            return f"Student(id={self.id}, group_id={self.group_id}, first_name={self.first_name}, last_name={self.last_name})"
-
-    class Course(db.Model):
-        __tablename__ = "courses"
-
-        id = db.Column(db.Integer, primary_key=True)
-        name = db.Column(db.String(100), nullable=False)
-        description = db.Column(db.String(250), nullable=False)
-
-        def __repr__(self):
-            return f"Course(id={self.id}, name={self.name}, description={self.description})"
-
+    from university_accounting import db
+    print("\ndb=", db)
     db.drop_all()
-
     db.create_all()
     print("Tables created:")
     for t in db.metadata.tables.items():
@@ -92,54 +44,9 @@ def testdb(app):
 
 @pytest.fixture(scope='session')
 def testdb_filled(app):
-    db = SQLAlchemy(app)
-
-    print("\ndb connected")
-
-    class Group(db.Model):
-        __tablename__ = "groups"
-
-        id = db.Column(db.Integer, primary_key=True)
-        name = db.Column(db.String(5))
-
-        students = db.relationship("Student", backref='groups')
-
-        def __repr__(self):
-            return f"Group(id={self.id}, name={self.name})"
-
-    association_table = db.Table(
-        "association",
-        db.Column("student_id", db.ForeignKey("students.id"), primary_key=True),
-        db.Column("course_id", db.ForeignKey("courses.id"), primary_key=True),
-    )
-
-    class Student(db.Model):
-        __tablename__ = "students"
-
-        id = db.Column(db.Integer, primary_key=True)
-        group_id = db.Column(db.Integer, db.ForeignKey("groups.id"), nullable=False)
-        first_name = db.Column(db.String(50), nullable=False)
-        last_name = db.Column(db.String(50), nullable=False)
-
-        courses = db.relationship(
-            "Course", secondary=association_table, backref="students"
-        )
-
-        def __repr__(self):
-            return f"Student(id={self.id}, group_id={self.group_id}, first_name={self.first_name}, last_name={self.last_name})"
-
-    class Course(db.Model):
-        __tablename__ = "courses"
-
-        id = db.Column(db.Integer, primary_key=True)
-        name = db.Column(db.String(100), nullable=False)
-        description = db.Column(db.String(250), nullable=False)
-
-        def __repr__(self):
-            return f"Course(id={self.id}, name={self.name}, description={self.description})"
-
+    from university_accounting import db, Group, Student, Course
+    print("\ndb=", db)
     db.drop_all()
-
     db.create_all()
     print("Tables created:")
     for t in db.metadata.tables.items():
@@ -162,6 +69,7 @@ def testdb_filled(app):
     db.session.commit()
 
     yield db
+
     print("\nsession.remove called")
     db.session.remove()
     db.drop_all()

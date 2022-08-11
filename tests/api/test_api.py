@@ -46,7 +46,7 @@ def test_studentsoncourse_post(client, testdb):
         [Course(id=i, name=course[0], description=course[1]) for i, course in enumerate(course_names[:4], 1)])
     testdb.session.flush()
 
-    helen_courses = [1,4]
+    helen_courses = [1, 4]
     helen = Student(id=1, first_name='Helen', last_name='Turner', group_id=1,
                     courses=[testdb.session.query(Course).get(course_id) for course_id in helen_courses])
     testdb.session.add(helen)
@@ -64,6 +64,7 @@ def test_studentsoncourse_post(client, testdb):
     assert response.status_code == 400
     assert json.loads(response.get_data()) == json_studentsoncourse_alreadythere
 
+
 def test_studentsoncourse_delete(client, testdb):
     testdb.session.add_all([Group(id=i, name=name) for i, name in enumerate(group_names[:3], 1)])
     testdb.session.flush()
@@ -78,7 +79,7 @@ def test_studentsoncourse_delete(client, testdb):
     testdb.session.add(helen)
     alan_courses = [2, 3]
     alan = Student(id=2, first_name='Alan', last_name='Turing', group_id=3,
-                    courses=[testdb.session.query(Course).get(course_id) for course_id in alan_courses])
+                   courses=[testdb.session.query(Course).get(course_id) for course_id in alan_courses])
     testdb.session.add(alan)
     testdb.session.commit()
 
