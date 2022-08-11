@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form action="" method="post">
+    <p><label>student id: </label><input type="number" name="student_id" value="" required />
+    <div>
+        <label>course: </label>
+        <select name="course_id">
+            <option value="1">Discrete Math</option>
+            <option value="2">Physics</option>
+            <option value="3">Math Analysis</option>
+            <option value="4">English</option>
+            <option value="5">Programming</option>
+            <option value="6">Symmetric Cryptography</option>
+            <option value="7">Asymmetric Cryptography</option>
+            <option value="8">Combinatorial Analysis</option>
+            <option value="9">Algorithms</option>
+            <option value="10">Statistics</option>
+        </select>
+    </div>
+    <p><input type="submit" value="Submit" />
+</form>
+{% endblock content %}

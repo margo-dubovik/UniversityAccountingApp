@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1>Show groups with less or equals student count</h1>
+<h2> Choose the count of students (max=30):</h2>
+<form action="" method="post">
+    <p><label>count: </label><input type="number" name="count" value="" required />
+    <p><input type="submit" value="Submit" />
+</form>
+
+{% if display_groups==True %}
+<h2>Groups with {{the_count}} or less students:</h2>
+<p>if you want to change number of students to filter by, charge it in the url</p>
+<table  style="margin-left: 20px;">
+    <thead>
+        <tr>
+            <th>group id</th>
+            <th>group name</th>
+            <th>number of students</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for group in groups_counted %}
+        <tr>
+            <td>{{ group[0] }}</td>
+            <td>{{ group[1] }}</td>
+            <td>{{ group[2] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{% endblock content %}
