@@ -1,5 +1,4 @@
 # University accounting application
-[application](http://localhost:8000/), [API](http://localhost:5000/apidocs/)<br> 
 Possible actions: 
 <ul>
 <li>display students table</li>
